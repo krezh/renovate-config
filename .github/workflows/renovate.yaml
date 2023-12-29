@@ -7,20 +7,24 @@ on:
     inputs:
       dryRun:
         description: Dry Run
-        default: "false"
+        default: false
         required: false
+        type: boolean
       logLevel:
         description: Log Level
         default: debug
         required: false
+        type: string
       version:
         description: Renovate version
         default: latest
         required: false
+        type: string
       repo:
         description: Specify Repo
         default: "*"
         required: false
+        type: string
   schedule:
     - cron: "0 * * * *"
   push:
@@ -35,7 +39,7 @@ concurrency:
 
 # Retrieve BOT_USER_ID via `curl -s "https://api.github.com/users/${BOT_USERNAME}%5Bbot%5D" | jq .id`
 env:
-  WORKFLOW_DRY_RUN: false
+  WORKFLOW_DRY_RUN: ${{ inputs.dryRun == true }}
   WORKFLOW_LOG_LEVEL: debug
   WORKFLOW_VERSION: latest
   RENOVATE_PLATFORM: github
