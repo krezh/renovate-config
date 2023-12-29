@@ -45,7 +45,7 @@ env:
 jobs:
   renovate:
     name: Renovate
-    runs-on: dextek-runner
+    runs-on: renovate-runner
     steps:
       - name: Generate Token
         uses: actions/create-github-app-token@v1.6.2
