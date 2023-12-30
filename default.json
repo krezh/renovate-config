@@ -10,7 +10,8 @@
     ":disableRateLimiting",
     ":dependencyDashboard",
     ":semanticCommits",
-    ":skipStatusChecks"
+    ":skipStatusChecks",
+    "github>krezh/renovate:labels",
   ],
   "timezone": "Europe/Stockholm",
   "platform": "github",
