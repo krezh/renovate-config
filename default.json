@@ -11,7 +11,7 @@
     ":dependencyDashboard",
     ":semanticCommits",
     ":skipStatusChecks",
-    "github>krezh/renovate:labels",
+    "github>krezh/renovate:labels.json5",
   ],
   "timezone": "Europe/Stockholm",
   "platform": "github",
