@@ -6,12 +6,13 @@
     "replacements:k8s-registry-move",
     "replacements:containerbase",
     ":automergeBranch",
+    ":automergeDigest",
     ":disableRateLimiting",
     ":dependencyDashboard",
     ":semanticCommits",
-    ":skipStatusChecks",
-    ":timezone(Europe/Stockholm)"
+    ":skipStatusChecks"
   ],
+  "timezone": "Europe/Stockholm",
   "platform": "github",
   "platformCommit": true,
   "onboarding": false,
@@ -20,6 +21,7 @@
   "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
   "assigneesFromCodeOwners": true,
   "reviewersFromCodeOwners": false,
+  "commitBodyTable": true,
   "rebaseWhen": "conflicted",
   "ignorePaths": ["**/archive/**", "**/.archive/**", "**/*.sops.*"]
 }
