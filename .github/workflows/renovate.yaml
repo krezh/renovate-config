@@ -52,7 +52,7 @@ env:
 jobs:
   renovate:
     name: Renovate
-    runs-on: renovate-runner
+    runs-on: renovate-config-runner
     steps:
       - name: Generate Token
         uses: actions/create-github-app-token@v1.6.2
