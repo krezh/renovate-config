@@ -12,6 +12,7 @@
     ":semanticCommits",
     ":skipStatusChecks",
     "github>krezh/renovate:labels.json5",
+    "github>krezh/renovate:commitMessage.json5",
   ],
   "timezone": "Europe/Stockholm",
   "platform": "github",
