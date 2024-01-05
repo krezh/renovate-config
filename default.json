@@ -14,7 +14,8 @@
     "github>krezh/renovate-config:labels.json5",
     "github>krezh/renovate-config:commitMessage.json5",
     "github>krezh/renovate-config:semanticCommits.json5",
-    "github>krezh/renovate-config:autoMerge.json5"
+    "github>krezh/renovate-config:autoMerge.json5",
+    "github>krezh/renovate-config:customManagers.json5"
   ],
   "timezone": "Europe/Stockholm",
   "platform": "github",
