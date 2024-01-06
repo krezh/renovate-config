@@ -6,8 +6,8 @@
       description: "Process custom dependencies",
       fileMatch: [".*"],
       matchStrings: [
-        // Example: # renovate: datasource=github-tags depName=siderolabs/talos
-        //          `k3s_release_version: "v1.27.3+k3s1"`
+        // Example: `# renovate: datasource=github-tags depName=siderolabs/talos`
+        // Example: `talos_version: "v1.6.0"`
         'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?"(?<currentValue>.*)"\n',
         // Example: `talos_version: "v1.6.0" # renovate: datasource=github-tags depName=siderolabs/talos`
         '.*?"(?<currentValue>.*)" # renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?',
