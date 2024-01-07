@@ -26,7 +26,6 @@
   "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
   "assigneesFromCodeOwners": true,
   "reviewersFromCodeOwners": false,
-  "commitBodyTable": true,
   "rebaseWhen": "conflicted",
   "ignorePaths": ["**/archive/**", "**/.archive/**", "**/*.sops.*"]
 }
