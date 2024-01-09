@@ -58,7 +58,7 @@ jobs:
     name: Renovate
     runs-on: renovate-config-runner
     steps:
-      - name: Renovate-Call ${{ github.event.client_payload.repo }}
+      - name: "Renovate Repo: (${{ github.event.client_payload.repo }})"
         if: ${{ github.event.client_payload.repo != ''}}
         shell: bash
         run: echo ${{ github.event.client_payload.repo }}
