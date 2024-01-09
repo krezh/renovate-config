@@ -4,7 +4,7 @@ name: "Renovate"
 
 on:
   repository_dispatch:
-    types: [renovate-call]
+    types: [Renovate-Call]
 
   workflow_dispatch:
     inputs:
@@ -58,6 +58,11 @@ jobs:
     name: Renovate
     runs-on: renovate-config-runner
     steps:
+      - name: Renovate-Call Repo
+        if: ${{ github.event.client_payload.repo != ''}}
+        shell: bash
+        run: echo ${{ github.event.client_payload.github.event.client_payload.repo }}
+
       - name: Generate Token
         uses: actions/create-github-app-token@v1.6.2
         id: app-token
