@@ -4,7 +4,7 @@ name: "Renovate"
 
 on:
   repository_dispatch:
-    types: [trigger-workflow]
+    types: [renovate-call]
 
   workflow_dispatch:
     inputs:
