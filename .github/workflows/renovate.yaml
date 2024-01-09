@@ -3,25 +3,33 @@
 name: "Renovate"
 
 on:
+  workflow_call:
+    inputs:
+      repo:
+        description: Specify Repo
+        type: string
+        required: false
+
   workflow_dispatch:
     inputs:
       dryRun:
         description: Dry Run
+        type: boolean
         default: false
         required: false
-        type: boolean
       logLevel:
         description: Log Level
+        type: string
         default: debug
         required: false
-        type: string
       version:
         description: Renovate version
+        type: string
         default: latest
         required: false
-        type: string
       repo:
         description: Specify Repo
+        type: string
         default: "*"
         required: false
   schedule:
