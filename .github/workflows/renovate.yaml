@@ -4,7 +4,7 @@ name: "Renovate"
 
 on:
   repository_dispatch:
-    types: [Renovate-Call]
+    types: [Renovate]
 
   workflow_dispatch:
     inputs:
