@@ -55,14 +55,9 @@ env:
 
 jobs:
   renovate:
-    name: Renovate
+    name: "Renovate: ${{ github.event.client_payload.repo || 'All' }}"
     runs-on: renovate-config-runner
     steps:
-      - name: "Renovate Repo: (${{ github.event.client_payload.repo }})"
-        if: ${{ github.event.client_payload.repo != ''}}
-        shell: bash
-        run: echo ${{ github.event.client_payload.repo }}
-
       - name: Generate Token
         uses: actions/create-github-app-token@v1.6.3
         id: app-token
