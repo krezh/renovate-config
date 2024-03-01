@@ -59,7 +59,7 @@ jobs:
     runs-on: renovate-config-runner
     steps:
       - name: Generate Token
-        uses: actions/create-github-app-token@v1.8.2
+        uses: actions/create-github-app-token@v1.9.0
         id: app-token
         with:
           app-id: "${{ secrets.BOT_APP_ID }}"
