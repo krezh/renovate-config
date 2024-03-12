@@ -20,7 +20,7 @@
   "platform": "github",
   "platformCommit": true,
   "onboarding": false,
-  "requireConfig": "optional",
+  "requireConfig": "required",
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
   "assigneesFromCodeOwners": true,
