@@ -23,8 +23,8 @@
   "requireConfig": "required",
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
-  "assigneesFromCodeOwners": true,
-  "reviewersFromCodeOwners": false,
+  "assigneesFromCodeOwners": false,
+  "reviewersFromCodeOwners": true,
   "rebaseWhen": "conflicted",
   "ignorePaths": ["**/archive/**", "**/.archive/**", "**/*.sops.*"]
 }
