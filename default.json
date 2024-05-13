@@ -5,6 +5,7 @@
     "docker:enableMajor",
     "replacements:k8s-registry-move",
     "replacements:containerbase",
+    "mergeConfidence:all-badges",
     ":automergeBranch",
     ":disableRateLimiting",
     ":dependencyDashboard",
