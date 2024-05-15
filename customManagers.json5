@@ -6,8 +6,10 @@
       description: "Process custom dependencies",
       fileMatch: [".*"],
       matchStrings: [
-        // Example: `talos_version: v1.6.0`
+        // Example: `talos_version: "v1.6.0"`
         'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?"(?<currentValue>.*)"',
+        // Example: `talos_version: v1.6.0`
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( repository=(?<registryUrl>\\S+))?\\n.+: (&\\S+\\s)?(?<currentValue>\\S+)",
         // Example: `talos_version: v1.6.0 # renovate: datasource=github-tags depName=siderolabs/talos`
         '.*?"(?<currentValue>.*)" # renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?',
         // Example: `- https://github.com/rancher/system-upgrade-controller/releases/download/v0.11.0/crd.yaml`
