@@ -67,7 +67,7 @@ jobs:
           if [ -z "${{ inputs.repo }}" ]; then
             echo repos=$(curl -sL -H "Authorization: Bearer ${{ secrets.LIST_REPOS_PAT }}" "https://api.github.com/user/repos?per_page=100" | jq '[.[] | .name]') >> $GITHUB_OUTPUT
           else
-            echo repos="${{ inputs.repo }}" >> $GITHUB_OUTPUT
+            echo repos="${{ fromJson(inputs.repo) }}" >> $GITHUB_OUTPUT
           fi
 
       - name: show output
