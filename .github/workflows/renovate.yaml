@@ -64,7 +64,11 @@ jobs:
         id: repo
         shell: bash
         run: |
-          echo repos=$(curl -sL -H "Authorization: Bearer ${{ secrets.LIST_REPOS_PAT }}" "https://api.github.com/user/repos?per_page=100" | jq '[.[] | .name]') >> $GITHUB_OUTPUT
+          if [ -z "${{ inputs.repo }}" ]; then
+            echo repos=$(curl -sL -H "Authorization: Bearer ${{ secrets.LIST_REPOS_PAT }}" "https://api.github.com/user/repos?per_page=100" | jq '[.[] | .name]') >> $GITHUB_OUTPUT
+          else
+            echo repos=["${{ toJson(inputs.repo) }}"] >> $GITHUB_OUTPUT
+          fi
 
       - name: show output
         run: |
