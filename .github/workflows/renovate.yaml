@@ -71,6 +71,7 @@ jobs:
       - name: show output
         run: |
           echo "repos: ${{ toJson(steps.repo.outputs.repos) }}"
+          echo "test: ${{ toJson(github.event.client_payload.message) }}"
 
   renovate:
     name: Renovate
