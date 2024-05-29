@@ -26,7 +26,7 @@ on:
       repo:
         description: Specify Repo
         type: string
-        default: "*"
+        default: ""
         required: false
   schedule:
     - cron: "0 * * * *"
