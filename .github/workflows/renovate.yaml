@@ -72,8 +72,7 @@ jobs:
 
       - name: show output
         run: |
-          echo "repos: ${{ toJson(steps.repo.outputs.repos) }}"
-          echo "test: ${{ toJson(github.event.client_payload.repo) }}"
+          echo "repos: ${{ toJson(steps.repo.outputs.repos) }}" >> $GITHUB_STEP_SUMMARY
 
   renovate:
     name: Renovate
