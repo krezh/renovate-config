@@ -20,7 +20,6 @@
   "timezone": "Europe/Stockholm",
   "platform": "github",
   "platformCommit": true,
-  "onboarding": false,
   "requireConfig": "required",
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
