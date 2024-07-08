@@ -25,9 +25,14 @@ on:
         required: false
       repo:
         description: Specify Repo
-        type: string
-        default: ""
+        type: choice
         required: false
+        options:
+          - "nix-config"
+          - "dextek"
+          - "talup"
+          - "containers"
+
   schedule:
     - cron: "0 * * * *"
   push:
