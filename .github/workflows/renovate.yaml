@@ -28,6 +28,7 @@ on:
         type: choice
         required: false
         options:
+          - "*"
           - "nix-config"
           - "dextek"
           - "talup"
