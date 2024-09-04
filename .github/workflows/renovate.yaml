@@ -87,7 +87,7 @@ jobs:
       RENOVATE_AUTODISCOVER_FILTER: "${{ github.repository_owner }}/${{ matrix.repo }}"
     steps:
       - name: Generate Token
-        uses: actions/create-github-app-token@v1.10.3
+        uses: actions/create-github-app-token@v1.10.4
         id: app-token
         with:
           app-id: "${{ secrets.BOT_APP_ID }}"
