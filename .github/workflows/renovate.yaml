@@ -51,6 +51,7 @@ env:
   RENOVATE_PLATFORM_COMMIT: true
   RENOVATE_ONBOARDING_CONFIG_FILE_NAME: .github/renovate.json5
   RENOVATE_AUTODISCOVER: true
+  INCLUDE_ARCHIVED: false
 
 jobs:
   generate-matrix:
@@ -64,7 +65,7 @@ jobs:
         shell: bash
         run: |
           if [ -z "${{ inputs.repo }}" ] && [ -z "${{ github.event.client_payload.repo }}" ]; then
-            echo repos=$(curl -sL -H "Authorization: Bearer ${{ secrets.LIST_REPOS_PAT }}" "https://api.github.com/user/repos?per_page=100" | jq '[.[] | .name]') >> $GITHUB_OUTPUT
+            echo repos=$(curl -sL -H "Authorization: Bearer ${{ secrets.LIST_REPOS_PAT }}" "https://api.github.com/user/repos?per_page=100" | jq '[.[] | select(.archived == ${{ env.INCLUDE_ARCHIVED }}) | .name]') >> $GITHUB_OUTPUT
           elif [ -n "${{ inputs.repo }}" ]; then
             echo repos='["${{ inputs.repo }}"]' >> $GITHUB_OUTPUT
           elif [ -n "${{ github.event.client_payload.repo }}" ]; then
