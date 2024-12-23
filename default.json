@@ -19,7 +19,7 @@
   ],
   "timezone": "Europe/Stockholm",
   "platform": "github",
-  "platformCommit": false,
+  "platformCommit": "disabled",
   "onboarding": false,
   "requireConfig": "required",
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
