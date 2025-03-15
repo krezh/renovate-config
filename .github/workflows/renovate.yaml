@@ -88,7 +88,7 @@ jobs:
       RENOVATE_AUTODISCOVER_FILTER: "${{ github.repository_owner }}/${{ matrix.repo }}"
     steps:
       - name: Generate Token
-        uses: actions/create-github-app-token@v1.11.6
+        uses: actions/create-github-app-token@21cfef2b496dd8ef5b904c159339626a10ad380e # v1.11.6
         id: app-token
         with:
           app-id: "${{ secrets.BOT_APP_ID }}"
@@ -96,7 +96,7 @@ jobs:
           owner: "${{ github.repository_owner }}"
 
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           token: "${{ steps.app-token.outputs.token }}"
 
@@ -107,7 +107,7 @@ jobs:
           echo "LOG_LEVEL=${{ github.event.inputs.logLevel || env.WORKFLOW_LOG_LEVEL }}" >> "${GITHUB_ENV}"
 
       - name: Renovate
-        uses: renovatebot/github-action@v41.0.14
+        uses: renovatebot/github-action@02f4fdeb479bbb229caa7ad82cb5e691c07e80b3 # v41.0.14
         with:
           configurationFile: "${{ env.RENOVATE_ONBOARDING_CONFIG_FILE_NAME }}"
           token: "${{ steps.app-token.outputs.token }}"
