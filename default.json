@@ -11,6 +11,7 @@
     ":dependencyDashboard",
     ":semanticCommits",
     ":skipStatusChecks",
+    "helpers:pinGitHubActionDigests",
     "github>krezh/renovate-config:labels.json5",
     "github>krezh/renovate-config:commitMessage.json5",
     "github>krezh/renovate-config:semanticCommits.json5",
