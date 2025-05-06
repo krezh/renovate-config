@@ -111,5 +111,4 @@ jobs:
         with:
           configurationFile: "${{ env.RENOVATE_ONBOARDING_CONFIG_FILE_NAME }}"
           token: "${{ steps.app-token.outputs.token }}"
-          #renovate-image: zot.int.plexuz.xyz/ghcr.io/renovatebot/renovate
           renovate-version: "${{ github.event.inputs.version || env.WORKFLOW_VERSION }}"
