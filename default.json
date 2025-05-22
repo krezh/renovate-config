@@ -20,13 +20,21 @@
   ],
   "timezone": "Europe/Stockholm",
   "platform": "github",
-  "platformCommit": "disabled",
+  "platformCommit": "enabled",
   "onboarding": false,
   "requireConfig": "required",
+  "configMigration": true,
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
-  "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
+  "suppressNotifications": [
+    "prEditedNotification",
+    "prIgnoreNotification"
+  ],
   "assigneesFromCodeOwners": false,
   "reviewersFromCodeOwners": true,
   "rebaseWhen": "conflicted",
-  "ignorePaths": ["**/archive/**", "**/.archive/**", "**/*.sops.*"]
+  "ignorePaths": [
+    "**/archive/**",
+    "**/.archive/**",
+    "**/*.sops.*"
+  ]
 }
