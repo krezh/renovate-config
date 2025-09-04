@@ -115,9 +115,9 @@ jobs:
         continue-on-error: true
         with:
           path: /tmp/renovate/cache/renovate/repository
-          key: renovate-cache-${{ runner.os }}-${{ github.run_id }}
+          key: renovate-cache-${{ matrix.repo }}-${{ github.run_id }}
           restore-keys: |
-            renovate-cache-${{ runner.os }}
+            renovate-cache-${{ matrix.repo }}
 
       - name: Set cache folder permissions
         shell: bash
