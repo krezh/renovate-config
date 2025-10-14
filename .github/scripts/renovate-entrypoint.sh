@@ -2,13 +2,28 @@
 
 set -e
 
-# Source Nix if it exists
-if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
-  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+# Check if nix is already available
+if ! command -v nix &> /dev/null; then
+  echo "Installing Nix..."
+  # Install Nix in single-user mode (no daemon)
+  sh <(curl -L https://nixos.org/nix/install) --no-daemon
+
+  # Source the Nix profile
+  if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+  fi
 fi
 
-# Add Nix to PATH
-export PATH="/nix/var/nix/profiles/default/bin:$PATH"
+# Ensure Nix is in PATH
+export PATH="$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
 
-# Run renovate as the ubuntu user (default user in renovate container)
-exec runuser -u ubuntu renovate
+# Verify nix is available
+if command -v nix &> /dev/null; then
+  echo "Nix is available: $(nix --version)"
+else
+  echo "ERROR: Nix installation failed or not found in PATH"
+  exit 1
+fi
+
+# Run renovate
+exec renovate

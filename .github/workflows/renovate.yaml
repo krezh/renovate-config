@@ -108,15 +108,6 @@ jobs:
         with:
           token: "${{ steps.app-token.outputs.token }}"
 
-      - name: Install Nix
-        if: startsWith(matrix.repo, 'nix')
-        uses: nixbuild/nix-quick-install-action@2c9db80fb984ceb1bcaa77cdda3fdf8cfba92035 # v34
-        with:
-          nix_conf: |
-            accept-flake-config = true
-            always-allow-substitutes = true
-            builders-use-substitutes = true
-
       - name: Renovate Cache
         id: renovate-cache
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
@@ -150,6 +141,4 @@ jobs:
           configurationFile: "${{ env.RENOVATE_ONBOARDING_CONFIG_FILE_NAME }}"
           token: "${{ steps.app-token.outputs.token }}"
           renovate-version: "${{ github.event.inputs.version || env.WORKFLOW_VERSION }}"
-          docker-volumes: "${{ startsWith(matrix.repo, 'nix') && '/tmp:/tmp;/nix:/nix' || '/tmp:/tmp' }}"
           docker-cmd-file: "${{ startsWith(matrix.repo, 'nix') && '.github/scripts/renovate-entrypoint.sh' || '' }}"
-          docker-user: "${{ startsWith(matrix.repo, 'nix') && 'root' || '' }}"
