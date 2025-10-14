@@ -31,7 +31,5 @@
   "stopUpdatingLabel": "renovate/stop-updating",
   "rebaseWhen": "conflicted",
   "ignorePaths": ["**/archive/**", "**/.archive/**", "**/*.sops.*"],
-  "allowedCommands": [
-    "^nix run github:Mic92/nix-update -- .* --flake --version=.*$"
-  ]
+  "allowedCommands": ["nix run github:Mic92/nix-update.*"]
 }
