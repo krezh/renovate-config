@@ -150,3 +150,4 @@ jobs:
           configurationFile: "${{ env.RENOVATE_ONBOARDING_CONFIG_FILE_NAME }}"
           token: "${{ steps.app-token.outputs.token }}"
           renovate-version: "${{ github.event.inputs.version || env.WORKFLOW_VERSION }}"
+          docker-volumes: "${{ startsWith(matrix.repo, 'nix') && '/tmp:/tmp;/nix:/nix' || '/tmp:/tmp' }}"
