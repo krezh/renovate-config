@@ -6,7 +6,13 @@ set -e
 if ! command -v nix &> /dev/null; then
   echo "Installing Nix in single-user mode..."
 
-  # Install Nix in single-user mode (no sudo required)
+  # Create /nix directory if running as root
+  if [ "$(id -u)" = "0" ]; then
+    mkdir -p /nix
+    chown ubuntu:ubuntu /nix
+  fi
+
+  # Install Nix in single-user mode (no daemon)
   curl -L https://nixos.org/nix/install | sh -s -- --no-daemon
 
   # Source the Nix profile
@@ -34,5 +40,9 @@ else
   exit 1
 fi
 
-# Run renovate
-exec renovate
+# If running as root, switch to ubuntu user to run renovate
+if [ "$(id -u)" = "0" ]; then
+  exec runuser -u ubuntu renovate
+else
+  exec renovate
+fi
