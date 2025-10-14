@@ -2,15 +2,20 @@
 
 set -e
 
+# If running as root, prepare /nix and switch to ubuntu user for everything else
+if [ "$(id -u)" = "0" ]; then
+  # Create /nix directory and set ownership
+  mkdir -p /nix
+  chown -R ubuntu:ubuntu /nix
+
+  # Switch to ubuntu user and re-run this script
+  exec runuser -u ubuntu "$0" "$@"
+fi
+
+# Now running as ubuntu user
 # Check if nix is already available
 if ! command -v nix &> /dev/null; then
   echo "Installing Nix in single-user mode..."
-
-  # Create /nix directory if running as root
-  if [ "$(id -u)" = "0" ]; then
-    mkdir -p /nix
-    chown ubuntu:ubuntu /nix
-  fi
 
   # Install Nix in single-user mode (no daemon)
   curl -L https://nixos.org/nix/install | sh -s -- --no-daemon
@@ -40,9 +45,5 @@ else
   exit 1
 fi
 
-# If running as root, switch to ubuntu user to run renovate
-if [ "$(id -u)" = "0" ]; then
-  exec runuser -u ubuntu renovate
-else
-  exec renovate
-fi
+# Run renovate
+exec renovate
