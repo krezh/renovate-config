@@ -2,7 +2,7 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["github>krezh/renovate-config"],
   allowedCommands: [
-    "^nix run github:Mic92/nix-update -- .+",
-    "^bash -c 'PKG=\\$\\(grep -oP .+",
-  ],
+     "^bash -c 'PKG=\\$\\(grep",
+     "^nix run github:Mic92/nix-update"
+   ]
 }
