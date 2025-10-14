@@ -151,3 +151,5 @@ jobs:
           token: "${{ steps.app-token.outputs.token }}"
           renovate-version: "${{ github.event.inputs.version || env.WORKFLOW_VERSION }}"
           docker-volumes: "${{ startsWith(matrix.repo, 'nix') && '/tmp:/tmp;/nix:/nix' || '/tmp:/tmp' }}"
+          docker-cmd-file: "${{ startsWith(matrix.repo, 'nix') && '.github/scripts/renovate-entrypoint.sh' || '' }}"
+          docker-user: "${{ startsWith(matrix.repo, 'nix') && 'root' || '' }}"
