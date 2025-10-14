@@ -14,10 +14,15 @@ on:
         default: false
         required: false
       logLevel:
-        description: Log Level
-        type: string
-        default: debug
-        required: false
+        description: Renovate log level
+        type: choice
+        options:
+          - trace
+          - debug
+          - info
+          - warn
+          - error
+        default: info
       version:
         description: Renovate version
         type: string
@@ -52,8 +57,6 @@ on:
 
 # Retrieve BOT_USER_ID via `curl -s "https://api.github.com/users/${BOT_USERNAME}%5Bbot%5D" | jq .id`
 env:
-  WORKFLOW_DRY_RUN: ${{ inputs.dryRun == true }}
-  WORKFLOW_LOG_LEVEL: debug
   WORKFLOW_VERSION: latest
   RENOVATE_PLATFORM: github
   RENOVATE_PLATFORM_COMMIT: true
@@ -82,7 +85,17 @@ jobs:
 
       - name: show output
         run: |
-          echo "repos: ${{ toJson(steps.repo.outputs.repos) }}" >> $GITHUB_STEP_SUMMARY
+          echo "## 📦 Repository Matrix" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          REPO_COUNT=$(echo '${{ steps.repo.outputs.repos }}' | jq 'length')
+          echo "> Running Renovate on **${REPO_COUNT}** repositor$([[ ${REPO_COUNT} -eq 1 ]] && echo "y" || echo "ies")" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "| # | Repository |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|------------|" >> $GITHUB_STEP_SUMMARY
+
+          echo '${{ steps.repo.outputs.repos }}' | jq -r 'to_entries[] | "| \(.key + 1) | `\(.value)` |"' >> $GITHUB_STEP_SUMMARY
 
   renovate:
     name: Renovate
@@ -91,7 +104,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repo: ["${{ fromJson(needs.generate-matrix.outputs.repos) }}"]
+        repo: ${{ fromJson(needs.generate-matrix.outputs.repos) }}
     env:
       RENOVATE_AUTODISCOVER_FILTER: "${{ github.repository_owner }}/${{ matrix.repo }}"
     steps:
@@ -111,7 +124,7 @@ jobs:
       - name: Renovate Cache
         id: renovate-cache
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
-        if: github.event.inputs.cache != 'disabled'
+        if: inputs.cache != 'disabled'
         continue-on-error: true
         with:
           path: /tmp/renovate/cache/renovate/repository
@@ -127,20 +140,16 @@ jobs:
           mkdir -p /tmp/renovate
           sudo chown -R 12021:$(id -g) /tmp/renovate
 
-      - name: Override default config from dispatch variables
-        shell: bash
-        run: |
-          echo "RENOVATE_DRY_RUN=${{ github.event.inputs.dryRun || env.WORKFLOW_DRY_RUN }}" >> "${GITHUB_ENV}"
-          echo "LOG_LEVEL=${{ github.event.inputs.logLevel || env.WORKFLOW_LOG_LEVEL }}" >> "${GITHUB_ENV}"
-
       - name: Renovate
         uses: renovatebot/github-action@70ea19f1b0dc8a9cc7af1b4278f8d3fd9778b577 # v43.0.17
         env:
-          RENOVATE_REPOSITORY_CACHE: ${{ github.event.inputs.cache }}
+          RENOVATE_REPOSITORY_CACHE: ${{ inputs.cache }}
+          LOG_LEVEL: ${{ inputs.logLevel }}
+          RENOVATE_DRY_RUN: ${{ inputs.dryRun }}
         with:
           configurationFile: "${{ env.RENOVATE_ONBOARDING_CONFIG_FILE_NAME }}"
           token: "${{ steps.app-token.outputs.token }}"
-          renovate-version: "${{ github.event.inputs.version || env.WORKFLOW_VERSION }}"
+          renovate-version: "${{ inputs.version }}"
           docker-volumes: /tmp:/tmp
           docker-cmd-file: "${{ startsWith(matrix.repo, 'nix') && '.github/scripts/renovate-entrypoint.sh' || '' }}"
           docker-user: "${{ startsWith(matrix.repo, 'nix') && 'root' || '' }}"
