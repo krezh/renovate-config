@@ -30,6 +30,5 @@
   "reviewersFromCodeOwners": true,
   "stopUpdatingLabel": "renovate/stop-updating",
   "rebaseWhen": "conflicted",
-  "ignorePaths": ["**/archive/**", "**/.archive/**", "**/*.sops.*"],
-  "allowedCommands": ["nix run github:Mic92/nix-update.*"]
+  "ignorePaths": ["**/archive/**", "**/.archive/**", "**/*.sops.*"]
 }

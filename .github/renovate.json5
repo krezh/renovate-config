@@ -1,4 +1,5 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["github>krezh/renovate-config"],
+  allowedCommands: ["^nix run github:Mic92/nix-update -- .+"],
 }
