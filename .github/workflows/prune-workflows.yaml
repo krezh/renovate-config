@@ -60,7 +60,7 @@ jobs:
           private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
 
       - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@feeb82053ea847a97fe4ee2aa314c94eac0eff04 # v2
+        uses: Mattraks/delete-workflow-runs@eccaeac8e3534d4eb7fe34988b2c91030dc073d0 # v2
         with:
           token: "${{ steps.app-token.outputs.token }}"
           repository: ${{ github.repository }}
