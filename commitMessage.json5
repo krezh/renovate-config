@@ -12,5 +12,15 @@
       matchDatasources: ["docker"],
       commitMessageTopic: "image {{depName}}",
     },
+    {
+      matchManagers: ["cargo"],
+      matchUpdateTypes: ["lockFileMaintenance"],
+      commitMessageTopic: "chore(cargo): update Cargo.lock",
+    },
+    {
+      matchManagers: ["nix"],
+      matchUpdateTypes: ["lockFileMaintenance"],
+      commitMessageTopic: "chore(nix): update flake.lock",
+    },
   ],
 }

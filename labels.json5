@@ -46,8 +46,12 @@
       addLabels: ["renovate/pip"],
     },
     {
-      matchDatasources: ["nix"],
+      matchManagers: ["nix"],
       addLabels: ["renovate/nix"],
+    },
+    {
+      matchManagers: ["cargo"],
+      addLabels: ["renovate/cargo"],
     },
   ],
 }
