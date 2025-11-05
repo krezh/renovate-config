@@ -1,7 +1,7 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   commitMessageTopic: "{{depName}}",
-  commitMessageExtra: " ( {{currentVersion}} → {{newVersion}} )",
+  commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
   commitMessageSuffix: "",
   packageRules: [
     {
@@ -15,12 +15,18 @@
     {
       matchManagers: ["cargo"],
       matchUpdateTypes: ["lockFileMaintenance"],
-      commitMessageTopic: "chore(cargo): update Cargo.lock",
+      semanticCommitType: "chore",
+      semanticCommitScope: "cargo",
+      commitMessageTopic: "update Cargo.lock",
+      commitMessageExtra: "",
     },
     {
       matchManagers: ["nix"],
       matchUpdateTypes: ["lockFileMaintenance"],
-      commitMessageTopic: "chore(nix): update flake.lock",
+      semanticCommitType: "chore",
+      semanticCommitScope: "nix",
+      commitMessageTopic: "update flake.lock",
+      commitMessageExtra: "",
     },
   ],
 }

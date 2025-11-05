@@ -6,7 +6,7 @@
       matchUpdateTypes: ["major"],
       commitMessagePrefix: "feat(container)!: ",
       commitMessageTopic: "{{depName}}",
-      commitMessageExtra: " ( {{currentVersion}} → {{newVersion}} )",
+      commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
     },
     {
       matchDatasources: ["docker"],
@@ -148,6 +148,14 @@
       semanticCommitScope: "github-action",
       commitMessageTopic: "{{depName}}",
       commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
+    },
+    {
+      matchManagers: ["github-actions"],
+      matchUpdateTypes: ["digest"],
+      semanticCommitType: "chore",
+      semanticCommitScope: "github-action",
+      commitMessageTopic: "{{depName}}",
+      commitMessageExtra: "( {{currentDigestShort}} → {{newDigestShort}} )",
     },
   ],
 }
