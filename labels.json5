@@ -18,6 +18,10 @@
       labels: ["type/digest"],
     },
     {
+      matchUpdateTypes: ["lockFileMaintenance"],
+      labels: ["type/lockfile"],
+    },
+    {
       matchDatasources: ["docker"],
       addLabels: ["renovate/container"],
     },
@@ -52,6 +56,46 @@
     {
       matchManagers: ["cargo"],
       addLabels: ["renovate/cargo"],
+    },
+    {
+      matchDatasources: ["npm"],
+      addLabels: ["renovate/npm"],
+    },
+    {
+      matchDatasources: ["go"],
+      addLabels: ["renovate/golang"],
+    },
+    {
+      matchManagers: ["gomod"],
+      addLabels: ["renovate/golang"],
+    },
+    {
+      matchDatasources: ["maven"],
+      addLabels: ["renovate/maven"],
+    },
+    {
+      matchDatasources: ["gradle"],
+      addLabels: ["renovate/gradle"],
+    },
+    {
+      matchDatasources: ["nuget"],
+      addLabels: ["renovate/nuget"],
+    },
+    {
+      matchDatasources: ["packagist"],
+      addLabels: ["renovate/php"],
+    },
+    {
+      matchDatasources: ["rubygems"],
+      addLabels: ["renovate/ruby"],
+    },
+    {
+      matchManagers: ["dockerfile"],
+      addLabels: ["renovate/dockerfile"],
+    },
+    {
+      matchManagers: ["kubernetes"],
+      addLabels: ["renovate/kubernetes"],
     },
   ],
 }
