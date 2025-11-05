@@ -1,8 +1,7 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  // Global defaults - commitMessageExtra is set in commitMessage.json5
   packageRules: [
-    // Set semantic commit scopes by datasource/manager
+    // Semantic commit scopes by datasource/manager
     {
       matchDatasources: ["docker"],
       semanticCommitScope: "container",
@@ -35,11 +34,52 @@
       matchManagers: ["nix"],
       semanticCommitScope: "nix",
     },
-    // Special handling for digest updates (use digest shortcodes)
+
+    // Semantic commit types by update type (non-major)
+    {
+      matchUpdateTypes: ["minor"],
+      semanticCommitType: "feat",
+    },
+    {
+      matchUpdateTypes: ["patch"],
+      semanticCommitType: "fix",
+    },
     {
       matchUpdateTypes: ["digest"],
       semanticCommitType: "chore",
       commitMessageExtra: "( {{currentDigestShort}} → {{newDigestShort}} )",
+    },
+
+    // Major updates with breaking change indicator (must specify prefix per scope)
+    {
+      matchDatasources: ["docker"],
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(container)!: ",
+    },
+    {
+      matchDatasources: ["helm"],
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(helm)!: ",
+    },
+    {
+      matchDatasources: ["galaxy", "galaxy-collection"],
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(ansible)!: ",
+    },
+    {
+      matchDatasources: ["terraform-provider"],
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(terraform)!: ",
+    },
+    {
+      matchDatasources: ["github-releases", "github-tags"],
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(github-release)!: ",
+    },
+    {
+      matchManagers: ["github-actions"],
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(github-action)!: ",
     },
   ],
 }

@@ -9,7 +9,7 @@
     {
       matchUpdateTypes: ["lockFileMaintenance"],
       semanticCommitType: "chore",
-      commitMessageTopic: "update {{managerName}} lock file",
+      commitMessageTopic: "update {{manager}} lock file",
       commitMessageExtra: "",
     },
   ],
