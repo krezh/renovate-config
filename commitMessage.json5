@@ -1,31 +1,15 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  // Global commit message format
   commitMessageTopic: "{{depName}}",
   commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
   commitMessageSuffix: "",
   packageRules: [
+    // Lock file maintenance (no version info)
     {
-      matchDatasources: ["helm"],
-      commitMessageTopic: "chart {{depName}}",
-    },
-    {
-      matchDatasources: ["docker"],
-      commitMessageTopic: "image {{depName}}",
-    },
-    {
-      matchManagers: ["cargo"],
       matchUpdateTypes: ["lockFileMaintenance"],
       semanticCommitType: "chore",
-      semanticCommitScope: "cargo",
-      commitMessageTopic: "update Cargo.lock",
-      commitMessageExtra: "",
-    },
-    {
-      matchManagers: ["nix"],
-      matchUpdateTypes: ["lockFileMaintenance"],
-      semanticCommitType: "chore",
-      semanticCommitScope: "nix",
-      commitMessageTopic: "update flake.lock",
+      commitMessageTopic: "update {{managerName}} lock file",
       commitMessageExtra: "",
     },
   ],
