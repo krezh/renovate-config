@@ -61,6 +61,7 @@ env:
   RENOVATE_ONBOARDING_CONFIG_FILE_NAME: .github/renovate.json5
   RENOVATE_AUTODISCOVER: true
   INCLUDE_ARCHIVED: false
+  RENOVATE_DOCKER_CMD_REPOS: "nix-config,kauth"
 
 jobs:
   generate-matrix:
@@ -138,6 +139,18 @@ jobs:
           mkdir -p /tmp/renovate
           sudo chown -R 12021:$(id -g) /tmp/renovate
 
+      - name: Set Docker Cmd File Variables
+        id: docker-cmd
+        shell: bash
+        run: |
+          if [[ ",${RENOVATE_DOCKER_CMD_REPOS}," == *",${{ matrix.repo }},"* ]]; then
+            echo "DOCKER_CMD_FILE=.github/scripts/renovate-entrypoint.sh" >> $GITHUB_ENV
+            echo "DOCKER_USER=root" >> $GITHUB_ENV
+          else
+            echo "DOCKER_CMD_FILE=" >> $GITHUB_ENV
+            echo "DOCKER_USER=" >> $GITHUB_ENV
+          fi
+
       - name: Renovate
         uses: renovatebot/github-action@4ebebabcd582dddea1692b05c3d5279f8e372b53 # v44.0.0
         env:
@@ -149,5 +162,5 @@ jobs:
           token: "${{ steps.app-token.outputs.token }}"
           renovate-version: "${{ inputs.version || env.RENOVATE_VERSION }}"
           docker-volumes: /tmp:/tmp
-          docker-cmd-file: "${{ startsWith(matrix.repo, 'nix') && '.github/scripts/renovate-entrypoint.sh' || '' }}"
-          docker-user: "${{ startsWith(matrix.repo, 'nix') && 'root' || '' }}"
+          docker-cmd-file: "${{ env.DOCKER_CMD_FILE }}"
+          docker-user: "${{ env.DOCKER_USER }}"
