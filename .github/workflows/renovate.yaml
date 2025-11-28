@@ -15,6 +15,8 @@ on:
       - "**/**.json5"
   workflow_dispatch:
     inputs:
+      distinct_id:
+        description: ""
       dryRun:
         description: Dry Run
         type: boolean
@@ -70,6 +72,9 @@ jobs:
     outputs:
       repos: ${{ steps.repo.outputs.repos }}
     steps:
+      - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
+        run: echo ${{ github.event.inputs.distinct_id }}
+
       - name: Get Repo List
         id: repo
         shell: bash
