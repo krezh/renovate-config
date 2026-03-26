@@ -63,58 +63,74 @@ env:
   RENOVATE_ONBOARDING_CONFIG_FILE_NAME: .github/renovate.json5
   RENOVATE_AUTODISCOVER: true
   INCLUDE_ARCHIVED: false
-  RENOVATE_DOCKER_CMD_REPOS: "nix-config,kauth"
   RENOVATE_TOPIC: "renovate-enabled"
+  DOCKER_CMD_TOPIC: "nix"
 
 jobs:
   generate-matrix:
     name: Generate Repo Matrix
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       repos: ${{ steps.repo.outputs.repos }}
+      nix-repos: ${{ steps.repo.outputs.nix-repos }}
     steps:
       - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
-        run: echo ${{ github.event.inputs.distinct_id }}
+        run: echo ${GITHUB_EVENT_INPUTS_DISTINCT_ID}
+        env:
+          GITHUB_EVENT_INPUTS_DISTINCT_ID: ${{ github.event.inputs.distinct_id }}
 
       - name: Get Repo List
         id: repo
         shell: bash
         run: |
-          if [ -z "${{ inputs.repo }}" ] && [ -z "${{ github.event.client_payload.repo }}" ]; then
-            echo repos=$(curl -SsL -H "Accept: application/vnd.github.mercy-preview+json" \
+          if [ -z "${INPUTS_REPO}" ] && [ -z "${GITHUB_EVENT_CLIENT_PAYLOAD_REPO}" ]; then
+            RESPONSE=$(curl -SsL -H "Accept: application/vnd.github.mercy-preview+json" \
               -H "Authorization: Bearer ${{ secrets.LIST_REPOS_PAT }}" \
-              "https://api.github.com/search/repositories?q=user:${{ github.repository_owner }}+topic:${{ env.RENOVATE_TOPIC }}" \
-              | jq '[.items[] | select(.archived == ${{ env.INCLUDE_ARCHIVED }} and .visibility == "public") | .name]') >> $GITHUB_OUTPUT
-          elif [ -n "${{ inputs.repo }}" ]; then
-            echo repos='["${{ inputs.repo }}"]' >> $GITHUB_OUTPUT
-          elif [ -n "${{ github.event.client_payload.repo }}" ]; then
-            echo repos='["${{ github.event.client_payload.repo }}"]' >> $GITHUB_OUTPUT
+              "https://api.github.com/search/repositories?q=user:${{ github.repository_owner }}+topic:${{ env.RENOVATE_TOPIC }}")
+            echo "repos=$(echo "${RESPONSE}" | jq -c '[.items[] | select(.archived == ${{ env.INCLUDE_ARCHIVED }} and .visibility == "public") | .name]')" >> $GITHUB_OUTPUT
+            echo "nix-repos=$(echo "${RESPONSE}" | jq -c '[.items[] | select(.archived == ${{ env.INCLUDE_ARCHIVED }} and .visibility == "public" and (.topics | contains(["${{ env.DOCKER_CMD_TOPIC }}"]))) | .name]')" >> $GITHUB_OUTPUT
+          elif [ -n "${INPUTS_REPO}" ]; then
+            echo "repos=[\"${INPUTS_REPO}\"]" >> $GITHUB_OUTPUT
+            echo "nix-repos=[]" >> $GITHUB_OUTPUT
+          elif [ -n "${GITHUB_EVENT_CLIENT_PAYLOAD_REPO}" ]; then
+            echo "repos=[\"${GITHUB_EVENT_CLIENT_PAYLOAD_REPO}\"]" >> $GITHUB_OUTPUT
+            echo "nix-repos=[]" >> $GITHUB_OUTPUT
           fi
+        env:
+          INPUTS_REPO: ${{ inputs.repo }}
+          GITHUB_EVENT_CLIENT_PAYLOAD_REPO: ${{ github.event.client_payload.repo }}
 
       - name: show output
         run: |
           echo "## 📦 Repository Matrix" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          REPO_COUNT=$(echo '${{ steps.repo.outputs.repos }}' | jq 'length')
+          REPO_COUNT=$(echo "${STEPS_REPO_OUTPUTS_REPOS}" | jq 'length')
           echo "> Running Renovate on **${REPO_COUNT}** repositor$([[ ${REPO_COUNT} -eq 1 ]] && echo "y" || echo "ies")" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           echo "| # | Repository |" >> $GITHUB_STEP_SUMMARY
           echo "|---|------------|" >> $GITHUB_STEP_SUMMARY
 
-          echo '${{ steps.repo.outputs.repos }}' | jq -r 'to_entries[] | "| \(.key + 1) | `\(.value)` |"' >> $GITHUB_STEP_SUMMARY
+          echo "${STEPS_REPO_OUTPUTS_REPOS}" | jq -r 'to_entries[] | "| \(.key + 1) | `\(.value)` |"' >> $GITHUB_STEP_SUMMARY
+        env:
+          STEPS_REPO_OUTPUTS_REPOS: ${{ steps.repo.outputs.repos }}
 
   renovate:
     name: Renovate
     needs: [generate-matrix]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
         repo: ${{ fromJson(needs.generate-matrix.outputs.repos) }}
     env:
       RENOVATE_AUTODISCOVER_FILTER: "${{ github.repository_owner }}/${{ matrix.repo }}"
+      NIX_REPOS: ${{ needs.generate-matrix.outputs.nix-repos }}
     steps:
       - name: Generate Token
         uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
@@ -152,13 +168,15 @@ jobs:
       - name: Set Docker Cmd File Variables
         id: docker-cmd
         shell: bash
+        env:
+          MATRIX_REPO: ${{ matrix.repo }}
         run: |
-          if [[ ",${RENOVATE_DOCKER_CMD_REPOS}," == *",${{ matrix.repo }},"* ]]; then
-            echo "DOCKER_CMD_FILE=.github/scripts/renovate-entrypoint.sh" >> $GITHUB_ENV
-            echo "DOCKER_USER=root" >> $GITHUB_ENV
+          if echo "${NIX_REPOS:-[]}" | jq -e --arg repo "${MATRIX_REPO}" 'index($repo) != null' > /dev/null; then
+            echo "docker-cmd-file=.github/scripts/renovate-entrypoint.sh" >> $GITHUB_OUTPUT
+            echo "docker-user=root" >> $GITHUB_OUTPUT
           else
-            echo "DOCKER_CMD_FILE=" >> $GITHUB_ENV
-            echo "DOCKER_USER=" >> $GITHUB_ENV
+            echo "docker-cmd-file=" >> $GITHUB_OUTPUT
+            echo "docker-user=" >> $GITHUB_OUTPUT
           fi
 
       - name: Renovate
@@ -172,5 +190,5 @@ jobs:
           token: "${{ steps.app-token.outputs.token }}"
           renovate-version: "${{ inputs.version || env.RENOVATE_VERSION }}"
           docker-volumes: /tmp:/tmp
-          docker-cmd-file: "${{ env.DOCKER_CMD_FILE }}"
-          docker-user: "${{ env.DOCKER_USER }}"
+          docker-cmd-file: "${{ steps.docker-cmd.outputs.docker-cmd-file }}"
+          docker-user: "${{ steps.docker-cmd.outputs.docker-user }}"
