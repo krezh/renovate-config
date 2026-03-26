@@ -111,12 +111,14 @@ jobs:
           echo "> Running Renovate on **${REPO_COUNT}** repositor$([[ ${REPO_COUNT} -eq 1 ]] && echo "y" || echo "ies")" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          echo "| # | Repository |" >> $GITHUB_STEP_SUMMARY
-          echo "|---|------------|" >> $GITHUB_STEP_SUMMARY
+          echo "| # | Repository | Tags |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|------------|------|" >> $GITHUB_STEP_SUMMARY
 
-          echo "${STEPS_REPO_OUTPUTS_REPOS}" | jq -r 'to_entries[] | "| \(.key + 1) | `\(.value)` |"' >> $GITHUB_STEP_SUMMARY
+          echo "${STEPS_REPO_OUTPUTS_REPOS}" | jq -r --argjson nix "${NIX_REPOS_OUTPUT:-[]}" \
+            'to_entries[] | .value as $repo | "| \(.key + 1) | `\($repo)` | \(if ($nix | contains([$repo])) then "`nix`" else "" end) |"' >> $GITHUB_STEP_SUMMARY
         env:
           STEPS_REPO_OUTPUTS_REPOS: ${{ steps.repo.outputs.repos }}
+          NIX_REPOS_OUTPUT: ${{ steps.repo.outputs.nix-repos }}
 
   renovate:
     name: Renovate
