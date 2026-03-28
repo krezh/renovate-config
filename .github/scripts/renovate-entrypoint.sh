@@ -19,7 +19,7 @@ if ! command -v nix &> /dev/null; then
 
   # Install Nix in single-user mode (no daemon)
   # renovate: datasource=github-tags depName=NixOS/nix
-  NIX_VERSION="2.34.3"
+  NIX_VERSION="2.34.4"
   curl -SsL "https://releases.nixos.org/nix/nix-${NIX_VERSION}/install" | sh -s -- --no-daemon
 
   # Source the Nix profile
