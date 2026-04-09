@@ -23,10 +23,17 @@
   "requireConfig": "required",
   "configMigration": true,
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
-  "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
+  "suppressNotifications": [
+    "prEditedNotification",
+    "prIgnoreNotification"
+  ],
   "assigneesFromCodeOwners": false,
   "reviewersFromCodeOwners": true,
   "stopUpdatingLabel": "renovate/stop-updating",
   "rebaseWhen": "conflicted",
-  "ignorePaths": ["**/archive/**", "**/.archive/**", "**/*.sops.*"]
+  "ignorePaths": [
+    "**/archive/**",
+    "**/.archive/**",
+    "**/*.sops.*"
+  ]
 }
