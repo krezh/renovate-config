@@ -116,7 +116,7 @@ jobs:
             'to_entries[] | "| \(.key + 1) | `\(.value.name)` | \(if .value.nix then "`nix`" else "" end) |"' >> $GITHUB_STEP_SUMMARY
 
   renovate:
-    name: Renovate
+    name: "Renovate: ${{ matrix.repo.name }}${{ matrix.repo.nix && ' (nix)' }}"
     needs: [generate-matrix]
     runs-on: ubuntu-latest
     permissions:
