@@ -29,11 +29,7 @@ fi
 
 # Now running as ubuntu user (owns /nix)
 lix="$(readlink /nix/var/lix-quick-install-action/lix)"
-MANPATH= . "$lix/etc/profile.d/nix.sh"
-"$lix/bin/nix-env" -i "$lix"
-
-# Ensure Lix is in PATH
-export PATH="$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
+export PATH="$lix/bin:/nix/var/nix/profiles/default/bin:$PATH"
 
 # Configure Lix settings
 export NIX_CONF_DIR="$HOME/.config/nix"
