@@ -4,46 +4,46 @@ set -e
 
 # If running as root, prepare /nix and switch to ubuntu user for everything else
 if [ "$(id -u)" = "0" ]; then
-  if ! [ -d /nix/store ]; then
-    echo "Installing Lix..."
-
-    mkdir -p /nix
-
-    # renovate: datasource=github-releases depName=canidae-solutions/lix-quick-install-action
-    RELEASE_TAG="v4.0.1"
-    LIX_VERSION="2.94.0"
-    url="https://github.com/canidae-solutions/lix-quick-install-action/releases/download/${RELEASE_TAG}/lix-${LIX_VERSION}-x86_64-linux.tar.zstd"
-
-    curl -sL --retry 3 --retry-connrefused "$url" \
-      | tar --skip-old-files --strip-components 1 -x -I unzstd -C /nix
-
-    lix="$(readlink /nix/var/lix-quick-install-action/lix)"
-    "$lix/bin/nix-store" --load-db < /nix/var/lix-quick-install-action/registration
-
-    chown -R ubuntu:ubuntu /nix
-  fi
+  # Create /nix directory and set ownership
+  mkdir -p /nix
+  chown -R ubuntu:ubuntu /nix
 
   # Switch to ubuntu user and re-run this script
   exec runuser -u ubuntu "$0" "$@"
 fi
 
-# Now running as ubuntu user (owns /nix)
-lix="$(readlink /nix/var/lix-quick-install-action/lix)"
-export PATH="$lix/bin:/nix/var/nix/profiles/default/bin:$PATH"
+# Now running as ubuntu user
+# Check if nix is already available
+if ! command -v nix &> /dev/null; then
+  echo "Installing Nix in single-user mode..."
 
-# Configure Lix settings
+  # Install Nix in single-user mode (no daemon)
+  # renovate: datasource=github-tags depName=NixOS/nix
+  NIX_VERSION="2.34.6"
+  curl -SsL "https://releases.nixos.org/nix/nix-${NIX_VERSION}/install" | sh -s -- --no-daemon
+
+  # Source the Nix profile
+  if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+  fi
+fi
+
+# Ensure Nix is in PATH
+export PATH="$HOME/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
+
+# Configure Nix settings
 export NIX_CONF_DIR="$HOME/.config/nix"
 mkdir -p "$NIX_CONF_DIR"
-cat > "$NIX_CONF_DIR/nix.conf" <<NIXCONF
+cat > "$NIX_CONF_DIR/nix.conf" <<EOF
 experimental-features = nix-command flakes
 accept-flake-config = true
-NIXCONF
+EOF
 
-# Verify lix is available
+# Verify nix is available
 if command -v nix &> /dev/null; then
-  echo "Lix is available: $(nix --version)"
+  echo "Nix is available: $(nix --version)"
 else
-  echo "ERROR: Lix installation failed"
+  echo "ERROR: Nix installation failed"
   exit 1
 fi
 
