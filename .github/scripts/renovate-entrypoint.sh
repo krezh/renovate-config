@@ -18,12 +18,11 @@ if ! command -v nix &> /dev/null; then
   echo "Installing Nix in single-user mode..."
 
   # Install Nix in single-user mode (no daemon)
-  # renovate: datasource=github-tags depName=NixOS/nix
-  NIX_VERSION="2.34.6"
-  curl -SsL "https://releases.nixos.org/nix/nix-${NIX_VERSION}/install" | sh -s -- --no-daemon
+  curl -SsL "https://install.lix.systems/lix" | bash -s -- install linux --no-confirm --no-start-daemon
 
   # Source the Nix profile
   if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+    # shellcheck disable=SC1091
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
   fi
 fi
