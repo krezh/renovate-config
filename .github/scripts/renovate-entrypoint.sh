@@ -24,6 +24,7 @@ if ! command -v nix &> /dev/null; then
 
   # Source the Nix profile
   if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+    # shellcheck disable=SC1091
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
   fi
 fi
