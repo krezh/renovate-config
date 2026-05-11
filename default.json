@@ -29,7 +29,7 @@
   ],
   "assigneesFromCodeOwners": false,
   "reviewersFromCodeOwners": true,
-  "stopUpdatingLabel": "renovate/stop-updating",
+  "stopUpdatingLabel": "renovate/stop",
   "rebaseWhen": "conflicted",
   "ignorePaths": [
     "**/archive/**",
