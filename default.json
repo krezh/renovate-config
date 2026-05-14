@@ -27,8 +27,8 @@
     "prEditedNotification",
     "prIgnoreNotification"
   ],
-  "assigneesFromCodeOwners": true,
-  "reviewersFromCodeOwners": false,
+  "assigneesFromCodeOwners": false,
+  "reviewersFromCodeOwners": true,
   "stopUpdatingLabel": "renovate/stop",
   "rebaseWhen": "conflicted",
   "ignorePaths": [
