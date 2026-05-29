@@ -9,7 +9,8 @@
     "github>krezh/renovate-config:commitMessage.json5",
     "github>krezh/renovate-config:semanticCommits.json5",
     "github>krezh/renovate-config:automerge-github-actions.json5",
-    "github>krezh/renovate-config:automerge-renovate.json5"
+    "github>krezh/renovate-config:automerge-renovate.json5",
+    "github>krezh/renovate-config:hostRules.json5"
   ],
   "timezone": "Europe/Stockholm",
   "platform": "github",
