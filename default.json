@@ -1,20 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    "docker:enableMajor",
     "replacements:k8s-registry-move",
     "replacements:containerbase",
-    ":automergeBranch",
-    ":disableRateLimiting",
-    ":dependencyDashboard",
     ":semanticCommits",
-    "helpers:pinGitHubActionDigests",
+    "github>home-operations/renovate-presets#1.3.1",
     "github>krezh/renovate-config:labels.json5",
     "github>krezh/renovate-config:commitMessage.json5",
     "github>krezh/renovate-config:semanticCommits.json5",
     "github>krezh/renovate-config:automerge-github-actions.json5",
-    "github>krezh/renovate-config:customManagers.json5"
+    "github>krezh/renovate-config:automerge-renovate.json5"
   ],
   "timezone": "Europe/Stockholm",
   "platform": "github",
@@ -22,7 +17,6 @@
   "onboarding": false,
   "requireConfig": "required",
   "configMigration": true,
-  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": [
     "prEditedNotification",
     "prIgnoreNotification"

@@ -1,0 +1,90 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: "Renovate Webhook"
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - .renovaterc.json5
+      - "**/**.json"
+      - "**/**.json5"
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  RENOVATE_TOPIC: renovate
+  INCLUDE_ARCHIVED: false
+  WEBHOOK_URL: https://renovate-webhook.plexuz.xyz/webhook/v1/schedule
+  WEBHOOK_NAMESPACE: ci
+  WEBHOOK_JOB: github
+
+jobs:
+  webhook:
+    name: Trigger Renovate Operator
+    runs-on: ubuntu-latest
+    environment:
+      name: prod
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Get Repo List
+        id: repo
+        shell: bash
+        env:
+          LIST_REPOS_PAT: ${{ secrets.LIST_REPOS_PAT }}
+          OWNER: ${{ github.repository_owner }}
+          RENOVATE_TOPIC: ${{ env.RENOVATE_TOPIC }}
+          INCLUDE_ARCHIVED: ${{ env.INCLUDE_ARCHIVED }}
+        run: .github/scripts/get-repos.sh >> "$GITHUB_OUTPUT"
+
+      - name: Trigger Renovate Operator per repo
+        shell: bash
+        env:
+          WEBHOOK_TOKEN: ${{ secrets.RENOVATE_OPERATOR_WEBHOOK }}
+          OWNER: ${{ github.repository_owner }}
+          REPOS: ${{ steps.repo.outputs.repos }}
+        run: |
+          if [ -z "${WEBHOOK_TOKEN}" ]; then
+            echo "::error::RENOVATE_OPERATOR_WEBHOOK secret is not set"
+            exit 1
+          fi
+
+          {
+            echo "## 🚀 Renovate Operator triggers"
+            echo ""
+            echo "> Endpoint: \`${WEBHOOK_URL}\` (namespace=\`${WEBHOOK_NAMESPACE}\`, job=\`${WEBHOOK_JOB}\`)"
+            echo ""
+            echo "| Repository | HTTP |"
+            echo "|------------|------|"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          failed=0
+          while read -r name; do
+            [ -z "${name}" ] && continue
+            project="${OWNER}/${name}"
+            status=$(curl --silent --show-error \
+              --request POST \
+              --header "Authorization: Bearer ${WEBHOOK_TOKEN}" \
+              --output /dev/null \
+              --write-out "%{http_code}" \
+              "${WEBHOOK_URL}?namespace=${WEBHOOK_NAMESPACE}&job=${WEBHOOK_JOB}&project=${OWNER}%2F${name}")
+
+            if [ "${status}" = "200" ]; then
+              echo "| \`${project}\` | ✅ ${status} |" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "| \`${project}\` | ❌ ${status} |" >> "$GITHUB_STEP_SUMMARY"
+              echo "::error::Webhook for ${project} returned HTTP ${status}"
+              failed=1
+            fi
+          done < <(echo "${REPOS}" | jq -r '.[].name')
+
+          exit "${failed}"
