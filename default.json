@@ -4,7 +4,7 @@
     "replacements:k8s-registry-move",
     "replacements:containerbase",
     ":semanticCommits",
-    "github>home-operations/renovate-presets#3.0.0",
+    "github>home-operations/renovate-presets#5.0.0",
     "local>krezh/renovate-config:labels.json5",
     "local>krezh/renovate-config:commitMessage.json5",
     "local>krezh/renovate-config:semanticCommits.json5",
